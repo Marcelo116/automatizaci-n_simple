@@ -1,30 +1,26 @@
-# importar la función By de selenium.webdriver.common.by,
-# misma que permite seleccionar elementos de una página web
-# por medio de selectores CSS.
+from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
+import time
 
-# Función para obtener el precio de una acción
-# Parámetros:
-# - driver: objeto de Selenium WebDriver
-# - consulta: cadena de texto que contiene la consulta del usuario
-def obtener_precio_accion(driver, consulta):
-    # Buscar el precio de una acción en Google
-    driver.get(f"https://www.google.com/search?q=precio+acción+{consulta}")
-
-    # Bloque try-except para manejar errores
+def obtener_precio_accion(nombre_accion):
     try:
-        # Obtener el nombre completo de la emprea
-        empresa = driver.find_element(By.CSS_SELECTOR, "div[class='PZPZlf ssJ7i B5dxMb']").text
+        options = Options()
+        options.add_argument("–headless/=new")
+        options.add_argument("--disable-blink-features=AutomationControlled")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
 
-        # Obtener el precio de la acción
-        precio = driver.find_element(By.CSS_SELECTOR, "span[jsname='vWLAgc']").text
-
-        # Obtener la divisa de la acción
-        divisa = 
-
-        # Obtener el ticker de la acción. Éste es el código que se usa para identificar la acción en la bolsa. Por ejemplo, el ticker de Apple es AAPL.
-        ticker = 
-        
-        return f"{empresa} [{ticker}]  ${precio} {divisa.upper()}."
+        driver = webdriver.Chrome(options=options)
+        driver.get(f"https://www.google.com/search?q=precio+de+{nombre_accion}")
+        wait = WebDriverWait(driver, 1)
+        precio = wait.until(EC.presence_of_element_located((By.XPATH, '//span[@jsname="vWLAgc"]'))).text
+        driver.quit()
+        return f"El precio de {nombre_accion} es {precio} pesos mexicanos."
     except Exception as e:
-        return "No se pudo obtener el precio de la acción en este momento."
+        print("No se pudo obtener el precio de la acción en este momento. Error:", e)
+        if driver:
+            driver.quit()
+        return None, None
