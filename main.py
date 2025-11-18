@@ -14,8 +14,14 @@ def procesar_input(user_input):
     return None
 
 if __name__ == "__main__":
-    print("Hola, soy tu asistente virtual. ¿En qué puedo ayudarte hoy?")
-
+    print("""
+*** Chatbot v1.0.0 ***
+Hola, soy el Chatbot v1.0.0. Puedo ayudarte a obtener precios de acciones o decirte
+la temperatura actual en cualquier ciudad del mundo.
+Puedes hacerme preguntas como por ejemplo:
+- ¿Cuál es el precio de una acción de Microsoft?
+- ¿Cuál es la temperatura actual en la Ciudad de México?
+""")
     while True:
         user_input = sanitizar(input("---> "))
 
